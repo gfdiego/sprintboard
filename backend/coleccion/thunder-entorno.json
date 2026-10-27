@@ -1,0 +1,81 @@
+{
+  "clientName": "Thunder Client",
+  "environmentName": "SprintBoard Local",
+  "dateExported": "2026-10-17T06:01:42.161Z",
+  "version": "1.1",
+  "folder": "",
+  "data": [
+    {
+      "name": "url",
+      "value": "http://localhost:3000/api"
+    },
+    {
+      "name": "token",
+      "value": ""
+    },
+    {
+      "name": "token_luis",
+      "value": ""
+    },
+    {
+      "name": "token_sofia",
+      "value": ""
+    },
+    {
+      "name": "ana_id",
+      "value": ""
+    },
+    {
+      "name": "luis_id",
+      "value": ""
+    },
+    {
+      "name": "sofia_id",
+      "value": ""
+    },
+    {
+      "name": "pid",
+      "value": ""
+    },
+    {
+      "name": "sid",
+      "value": ""
+    },
+    {
+      "name": "sid2",
+      "value": ""
+    },
+    {
+      "name": "tid",
+      "value": ""
+    },
+    {
+      "name": "tid2",
+      "value": ""
+    },
+    {
+      "name": "tid3",
+      "value": ""
+    },
+    {
+      "name": "epica_id",
+      "value": ""
+    },
+    {
+      "name": "sub_id",
+      "value": ""
+    },
+    {
+      "name": "cid",
+      "value": ""
+    },
+    {
+      "name": "eid",
+      "value": ""
+    },
+    {
+      "name": "eid2",
+      "value": ""
+    }
+  ]
+}

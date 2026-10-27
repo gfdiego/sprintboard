@@ -1,0 +1,779 @@
+### =====================================================================
+### SprintBoard API - colección para REST Client (extensión gratuita de VS Code)
+### 1. Instala "REST Client" (autor: Huachao Mao).
+### 2. Arranca el backend: cd backend && npm run dev
+### 3. Pulsa "Send Request" encima de cada petición, EN ORDEN.
+###    Los tokens y los ids se toman solos de las respuestas anteriores.
+### Si los usuarios ya existen, salta el registro y empieza por los Login.
+### Guía completa: coleccion/RUTAS_API.md
+### =====================================================================
+
+@url = http://localhost:3000/api
+@token = {{loginAna.response.body.accessToken}}
+@ana_id = {{loginAna.response.body.usuario.id}}
+@token_luis = {{loginLuis.response.body.accessToken}}
+@luis_id = {{loginLuis.response.body.usuario.id}}
+@token_sofia = {{loginSofia.response.body.accessToken}}
+@sofia_id = {{loginSofia.response.body.usuario.id}}
+@pid = {{crearProyecto.response.body.id}}
+@eid = {{crearEtiqueta.response.body.id}}
+@eid2 = {{crearOtraEtiqueta.response.body.id}}
+@sid = {{crearSprint.response.body.id}}
+@epica_id = {{crearEpica.response.body.id}}
+@tid = {{crearHistoriaConPuntosAsignadaYEnElSprint.response.body.id}}
+@tid2 = {{crearBug.response.body.id}}
+@sub_id = {{crearSubtarea.response.body.id}}
+@tid3 = {{crearTareaParaElBacklog.response.body.id}}
+@cid = {{comentarTareaComoLuis.response.body.id}}
+@sid2 = {{crearSprintParaEliminar.response.body.id}}
+
+
+### =====================================================================
+### 0. INICIO
+### Comprobar que el servidor está encendido. No requieren token.
+### =====================================================================
+
+### 1. Estado del servidor  →  espera 200
+# Responde { "estado": "ok" } si la API está encendida.
+# Permiso: Pública
+GET {{url}}/salud
+
+### 2. Información de la API  →  espera 200
+# Muestra el nombre de la API y cuáles rutas son públicas.
+# Permiso: Pública
+GET {{url}}
+
+
+### =====================================================================
+### 1. AUTENTICACIÓN
+### Registro e inicio de sesión. Guardan automáticamente el token y el id de cada usuario.
+### =====================================================================
+
+### 3. Registrar a Ana (admin)  →  espera 201
+# Crea la cuenta de Ana. Si ya existe responde 409: usa "Login Ana".
+# Permiso: Pública
+POST {{url}}/auth/registro
+Content-Type: application/json
+
+{
+  "nombre": "Ana Pérez",
+  "correo": "ana@prueba.com",
+  "password": "Clave1234"
+}
+
+### 4. Registrar a Luis (miembro)  →  espera 201
+# Crea la cuenta de Luis.
+# Permiso: Pública
+POST {{url}}/auth/registro
+Content-Type: application/json
+
+{
+  "nombre": "Luis Gómez",
+  "correo": "luis@prueba.com",
+  "password": "Clave1234"
+}
+
+### 5. Registrar a Sofía (observadora)  →  espera 201
+# Crea la cuenta de Sofía.
+# Permiso: Pública
+POST {{url}}/auth/registro
+Content-Type: application/json
+
+{
+  "nombre": "Sofía Ramírez",
+  "correo": "sofia@prueba.com",
+  "password": "Clave1234"
+}
+
+### 6. Login Ana  →  espera 200
+# Inicia sesión y guarda {{token}}, que usan por defecto todas las peticiones.
+# Permiso: Pública
+# @name loginAna
+POST {{url}}/auth/login
+Content-Type: application/json
+
+{
+  "correo": "ana@prueba.com",
+  "password": "Clave1234"
+}
+
+### 7. Login Luis  →  espera 200
+# Guarda {{token_luis}}.
+# Permiso: Pública
+# @name loginLuis
+POST {{url}}/auth/login
+Content-Type: application/json
+
+{
+  "correo": "luis@prueba.com",
+  "password": "Clave1234"
+}
+
+### 8. Login Sofía  →  espera 200
+# Guarda {{token_sofia}}.
+# Permiso: Pública
+# @name loginSofia
+POST {{url}}/auth/login
+Content-Type: application/json
+
+{
+  "correo": "sofia@prueba.com",
+  "password": "Clave1234"
+}
+
+### 9. Mi usuario (yo)  →  espera 200
+# Devuelve los datos del dueño del token.
+# Permiso: Cualquier usuario con token
+GET {{url}}/auth/yo
+Authorization: Bearer {{token}}
+
+### 9.1 Renovar el access token  →  espera 200
+# Usa la cookie httpOnly "refreshToken" que dejó el último login (REST Client la guarda solo).
+# Devuelve un accessToken nuevo y rota la cookie: el refresh anterior deja de servir.
+# Permiso: Pública (requiere la cookie)
+# @name refrescarSesion
+POST {{url}}/auth/refresh
+
+### 9.2 Mis sesiones abiertas  →  espera 200
+# Lista los dispositivos con sesión abierta; "actual": true marca este.
+# Permiso: Cualquier usuario con token
+# @name misSesiones
+GET {{url}}/auth/sesiones
+Authorization: Bearer {{token}}
+
+### 9.3 Cerrar una sesión concreta  →  espera 204
+# Cierra el primer dispositivo de la lista anterior.
+# Permiso: El dueño de la sesión
+DELETE {{url}}/auth/sesiones/{{misSesiones.response.body.$[0].id}}
+Authorization: Bearer {{token}}
+
+### 9.4 Cerrar sesión en todos los dispositivos  →  espera 204
+# Revoca todas las sesiones de Ana. Vuelve a ejecutar "6. Login Ana" después.
+# Permiso: Cualquier usuario con token
+POST {{url}}/auth/logout-todas
+Authorization: Bearer {{token}}
+
+### 9.5 Cerrar sesión  →  espera 204
+# Revoca el refresh token de la cookie y la borra. Después, 9.1 responde 401.
+# Vuelve a ejecutar "6. Login Ana" para seguir probando.
+# Permiso: Pública
+POST {{url}}/auth/logout
+
+
+### =====================================================================
+### 2. PROYECTOS
+### Quien crea el proyecto queda como admin.
+### =====================================================================
+
+### 10. Crear proyecto  →  espera 201
+# Crea el proyecto y guarda su id en {{pid}}. La clave (2-10 letras/números) se usa en las tareas: WEB-1, WEB-2…
+# Permiso: Cualquier usuario con token
+# @name crearProyecto
+POST {{url}}/proyectos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "clave": "WEB",
+  "nombre": "Sitio web corporativo",
+  "descripcion": "Rediseño del sitio web de la empresa"
+}
+
+### 11. Listar mis proyectos  →  espera 200
+# Proyectos donde soy miembro, con mi rol y cuántas tareas siguen abiertas.
+# Permiso: Cualquier usuario con token
+GET {{url}}/proyectos
+Authorization: Bearer {{token}}
+
+### 12. Ver proyecto  →  espera 200
+# Detalle del proyecto, con el sprint activo si existe.
+# Permiso: observador, miembro, admin
+GET {{url}}/proyectos/{{pid}}
+Authorization: Bearer {{token}}
+
+### 13. Editar proyecto  →  espera 200
+# Cambia el nombre o la descripción. La clave no se puede cambiar.
+# Permiso: admin
+PATCH {{url}}/proyectos/{{pid}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "descripcion": "Rediseño completo del sitio y del blog"
+}
+
+
+### =====================================================================
+### 3. MIEMBROS
+### Agregar personas al proyecto (deben estar registradas) y darles un rol.
+### =====================================================================
+
+### 14. Agregar a Luis como miembro  →  espera 201
+# Se agrega por correo. capacidad_puntos = cuántos puntos puede asumir por sprint.
+# Permiso: admin
+POST {{url}}/proyectos/{{pid}}/miembros
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "correo": "luis@prueba.com",
+  "rol": "miembro",
+  "capacidad_puntos": 8
+}
+
+### 15. Agregar a Sofía como observadora  →  espera 201
+# Un observador solo puede ver.
+# Permiso: admin
+POST {{url}}/proyectos/{{pid}}/miembros
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "correo": "sofia@prueba.com",
+  "rol": "observador"
+}
+
+### 16. Listar miembros  →  espera 200
+# Miembros con su rol y capacidad.
+# Permiso: observador, miembro, admin
+GET {{url}}/proyectos/{{pid}}/miembros
+Authorization: Bearer {{token}}
+
+### 17. Cambiar capacidad de Luis  →  espera 200
+# Cambia el rol y/o la capacidad de puntos.
+# Permiso: admin
+PATCH {{url}}/proyectos/{{pid}}/miembros/{{luis_id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "capacidad_puntos": 10
+}
+
+
+### =====================================================================
+### 4. ETIQUETAS
+### Etiquetas de color para clasificar tareas.
+### =====================================================================
+
+### 18. Crear etiqueta  →  espera 201
+# Guarda su id en {{eid}}. El color va en formato #RRGGBB.
+# Permiso: miembro, admin
+# @name crearEtiqueta
+POST {{url}}/proyectos/{{pid}}/etiquetas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "frontend",
+  "color": "#3b82f6"
+}
+
+### 19. Crear otra etiqueta  →  espera 201
+# Guarda su id en {{eid2}}.
+# Permiso: miembro, admin
+# @name crearOtraEtiqueta
+POST {{url}}/proyectos/{{pid}}/etiquetas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "urgente",
+  "color": "#ef4444"
+}
+
+### 20. Listar etiquetas  →  espera 200
+# Etiquetas del proyecto y en cuántas tareas se usan.
+# Permiso: observador, miembro, admin
+GET {{url}}/proyectos/{{pid}}/etiquetas
+Authorization: Bearer {{token}}
+
+
+### =====================================================================
+### 5. SPRINTS
+### Iteraciones de trabajo. Solo puede haber un sprint activo por proyecto.
+### =====================================================================
+
+### 21. Crear sprint  →  espera 201
+# Guarda su id en {{sid}}. Si no envías nombre se llama "Sprint N". Fechas en formato AAAA-MM-DD (opcionales).
+# Permiso: admin
+# @name crearSprint
+POST {{url}}/proyectos/{{pid}}/sprints
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Sprint 1",
+  "objetivo": "Página de inicio y login"
+}
+
+### 22. Listar sprints  →  espera 200
+# Sprints con totales de tareas y puntos.
+# Permiso: observador, miembro, admin
+GET {{url}}/proyectos/{{pid}}/sprints
+Authorization: Bearer {{token}}
+
+### 23. Ver sprint  →  espera 200
+# Detalle del sprint con su resumen.
+# Permiso: observador, miembro, admin
+GET {{url}}/sprints/{{sid}}
+Authorization: Bearer {{token}}
+
+### 24. Editar sprint  →  espera 200
+# No se puede editar un sprint cerrado.
+# Permiso: admin
+PATCH {{url}}/sprints/{{sid}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "objetivo": "Página de inicio, login y formulario de contacto"
+}
+
+
+### =====================================================================
+### 6. TAREAS
+### Crear, estimar (puntos), asignar y mover tareas.
+### =====================================================================
+
+### 25. Crear épica  →  espera 201
+# Una épica agrupa varias historias. Guarda su id en {{epica_id}}.
+# Permiso: miembro, admin
+# @name crearEpica
+POST {{url}}/proyectos/{{pid}}/tareas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "titulo": "Autenticación de usuarios",
+  "tipo": "epica",
+  "prioridad": "alta"
+}
+
+### 26. Crear historia (con puntos, asignada y en el sprint)  →  espera 201
+# Tarea completa: dificultad de 5 puntos, asignada a Luis, dentro del sprint, hija de la épica y con etiqueta. Guarda su id en {{tid}}.
+# Permiso: miembro, admin
+# @name crearHistoriaConPuntosAsignadaYEnElSprint
+POST {{url}}/proyectos/{{pid}}/tareas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "titulo": "Pantalla de inicio de sesión",
+  "descripcion": "Formulario con correo y contraseña, con validaciones",
+  "tipo": "historia",
+  "prioridad": "alta",
+  "puntos": 5,
+  "asignado_id": {{luis_id}},
+  "sprint_id": {{sid}},
+  "padre_id": {{epica_id}},
+  "fecha_limite": "2026-12-15",
+  "etiquetas": [
+    {{eid}}
+  ]
+}
+
+### 27. Crear bug  →  espera 201
+# Bug crítico de 3 puntos en el sprint, sin asignar. Guarda su id en {{tid2}}.
+# Permiso: miembro, admin
+# @name crearBug
+POST {{url}}/proyectos/{{pid}}/tareas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "titulo": "El menú no se ve en celulares",
+  "tipo": "bug",
+  "prioridad": "critica",
+  "puntos": 3,
+  "sprint_id": {{sid}}
+}
+
+### 28. Crear subtarea  →  espera 201
+# Una subtarea siempre necesita padre_id. Guarda su id en {{sub_id}}.
+# Permiso: miembro, admin
+# @name crearSubtarea
+POST {{url}}/proyectos/{{pid}}/tareas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "titulo": "Validar formato del correo",
+  "tipo": "subtarea",
+  "puntos": 1,
+  "padre_id": {{tid}}
+}
+
+### 29. Crear tarea para el backlog  →  espera 201
+# Sin sprint_id la tarea queda en el backlog. Guarda su id en {{tid3}}.
+# Permiso: miembro, admin
+# @name crearTareaParaElBacklog
+POST {{url}}/proyectos/{{pid}}/tareas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "titulo": "Optimizar imágenes del sitio",
+  "tipo": "tarea",
+  "prioridad": "baja",
+  "puntos": 2
+}
+
+### 30. Listar todas las tareas  →  espera 200
+# Ordenadas por prioridad. Acepta filtros (ver las siguientes peticiones).
+# Permiso: observador, miembro, admin
+GET {{url}}/proyectos/{{pid}}/tareas
+Authorization: Bearer {{token}}
+
+### 31. Filtrar: mis tareas (como Luis)  →  espera 200
+# Filtros: asignado=yo|ninguno|<id>, estado, sprint=backlog|<id>, tipo, prioridad, q (texto o clave).
+# Permiso: observador, miembro, admin
+GET {{url}}/proyectos/{{pid}}/tareas?asignado=yo
+Authorization: Bearer {{token_luis}}
+
+### 32. Filtrar: sin asignar  →  espera 200
+# Tareas que nadie tiene asignadas.
+# Permiso: observador, miembro, admin
+GET {{url}}/proyectos/{{pid}}/tareas?asignado=ninguno
+Authorization: Bearer {{token}}
+
+### 33. Filtrar: bugs  →  espera 200
+# Solo tareas de tipo bug.
+# Permiso: observador, miembro, admin
+GET {{url}}/proyectos/{{pid}}/tareas?tipo=bug
+Authorization: Bearer {{token}}
+
+### 34. Buscar por texto o clave  →  espera 200
+# Busca en el título o en la clave (por ejemplo q=WEB-2).
+# Permiso: observador, miembro, admin
+GET {{url}}/proyectos/{{pid}}/tareas?q=login
+Authorization: Bearer {{token}}
+
+### 35. Ver backlog  →  espera 200
+# Tareas sin sprint (sin subtareas), con el total de puntos y cuántas faltan por estimar.
+# Permiso: observador, miembro, admin
+GET {{url}}/proyectos/{{pid}}/backlog
+Authorization: Bearer {{token}}
+
+### 36. Ver tarea  →  espera 200
+# Detalle con padre, hijas y puntos_hijas.
+# Permiso: observador, miembro, admin
+GET {{url}}/tareas/{{tid}}
+Authorization: Bearer {{token}}
+
+### 37. Editar tarea (cambiar puntos y prioridad)  →  espera 200
+# Campos editables: titulo, descripcion, tipo, prioridad, puntos, sprint_id, padre_id, fecha_limite. Envía solo los que cambian.
+# Permiso: miembro, admin
+PATCH {{url}}/tareas/{{tid}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "puntos": 8,
+  "prioridad": "critica"
+}
+
+### 38. Asignar bug a Luis  →  espera 200
+# Si el miembro supera su capacidad de puntos en el sprint, la respuesta trae advertencia (aquí: 8 + 3 = 11 > 10).
+# Permiso: miembro, admin
+PATCH {{url}}/tareas/{{tid2}}/asignar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "asignado_id": {{luis_id}}
+}
+
+### 39. Reasignar bug a Ana  →  espera 200
+# Cambia el responsable. Con null la tarea queda sin asignar.
+# Permiso: miembro, admin
+PATCH {{url}}/tareas/{{tid2}}/asignar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "asignado_id": {{ana_id}}
+}
+
+### 40. Mover tarea a "en progreso"  →  espera 200
+# Estados: por_hacer, en_progreso, en_revision, hecho. orden (opcional) es la posición en la columna.
+# Permiso: miembro, admin
+PATCH {{url}}/tareas/{{tid}}/mover
+Authorization: Bearer {{token_luis}}
+Content-Type: application/json
+
+{
+  "estado": "en_progreso"
+}
+
+### 41. Mover bug a "hecho"  →  espera 200
+# Lo usa el tablero Kanban al arrastrar una tarjeta.
+# Permiso: miembro, admin
+PATCH {{url}}/tareas/{{tid2}}/mover
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "estado": "hecho",
+  "orden": 0
+}
+
+### 42. Poner etiquetas a una tarea  →  espera 200
+# Reemplaza todas las etiquetas de la tarea por la lista enviada.
+# Permiso: miembro, admin
+PUT {{url}}/tareas/{{tid2}}/etiquetas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "etiquetas": [
+    {{eid}},
+    {{eid2}}
+  ]
+}
+
+### 43. Historial de la tarea  →  espera 200
+# Todos los cambios: quién, cuándo y qué valores cambiaron.
+# Permiso: observador, miembro, admin
+GET {{url}}/tareas/{{tid}}/historial
+Authorization: Bearer {{token}}
+
+
+### =====================================================================
+### 7. COMENTARIOS
+### Conversación dentro de una tarea.
+### =====================================================================
+
+### 44. Comentar tarea (como Luis)  →  espera 201
+# Guarda el id en {{cid}}.
+# Permiso: miembro, admin
+# @name comentarTareaComoLuis
+POST {{url}}/tareas/{{tid}}/comentarios
+Authorization: Bearer {{token_luis}}
+Content-Type: application/json
+
+{
+  "contenido": "Ya tengo listo el diseño del formulario, empiezo con las validaciones."
+}
+
+### 45. Listar comentarios  →  espera 200
+# Comentarios en orden cronológico.
+# Permiso: observador, miembro, admin
+GET {{url}}/tareas/{{tid}}/comentarios
+Authorization: Bearer {{token}}
+
+### 46. Editar comentario (como Luis)  →  espera 200
+# Solo el autor puede editarlo.
+# Permiso: Solo el autor
+PATCH {{url}}/comentarios/{{cid}}
+Authorization: Bearer {{token_luis}}
+Content-Type: application/json
+
+{
+  "contenido": "Diseño listo. Validaciones en progreso, termino mañana."
+}
+
+
+### =====================================================================
+### 8. TABLERO Y REPORTES
+### Vistas para el tablero Kanban y las métricas del equipo.
+### =====================================================================
+
+### 47. Iniciar sprint  →  espera 200
+# Pone el sprint en "activo" con fecha de inicio hoy. fecha_fin es opcional (por defecto, 2 semanas).
+# Permiso: admin
+POST {{url}}/sprints/{{sid}}/iniciar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{}
+
+### 48. Tablero Kanban  →  espera 200
+# Tareas del sprint agrupadas en columnas por estado.
+# Permiso: observador, miembro, admin
+GET {{url}}/sprints/{{sid}}/tablero
+Authorization: Bearer {{token}}
+
+### 49. Carga por miembro  →  espera 200
+# Puntos asignados frente a la capacidad de cada miembro en el sprint activo (o ?sprint=<id>).
+# Permiso: observador, miembro, admin
+GET {{url}}/proyectos/{{pid}}/reportes/carga
+Authorization: Bearer {{token}}
+
+### 50. Burndown del sprint  →  espera 200
+# Puntos restantes por día y la línea ideal. Los días futuros vienen con restante: null.
+# Permiso: observador, miembro, admin
+GET {{url}}/sprints/{{sid}}/reportes/burndown
+Authorization: Bearer {{token}}
+
+### 51. Cerrar sprint  →  espera 200
+# Cierra el sprint. Las tareas que no están en "hecho" vuelven al backlog.
+# Permiso: admin
+POST {{url}}/sprints/{{sid}}/cerrar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{}
+
+### 52. Velocidad del equipo  →  espera 200
+# Puntos completados en cada sprint cerrado y el promedio.
+# Permiso: observador, miembro, admin
+GET {{url}}/proyectos/{{pid}}/reportes/velocidad
+Authorization: Bearer {{token}}
+
+
+### =====================================================================
+### 9. PRUEBAS DE ERRORES
+### Todas deben FALLAR con el código indicado. Sirven para comprobar las validaciones y los permisos.
+### =====================================================================
+
+### 53. ERROR 400 - Puntos inválidos  →  espera 400
+# 4 no está en la serie 1, 2, 3, 5, 8, 13, 21.
+# Permiso: miembro, admin
+POST {{url}}/proyectos/{{pid}}/tareas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "titulo": "Tarea mal estimada",
+  "puntos": 4
+}
+
+### 54. ERROR 400 - Subtarea sin padre  →  espera 400
+# Una subtarea necesita padre_id.
+# Permiso: miembro, admin
+POST {{url}}/proyectos/{{pid}}/tareas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "titulo": "Subtarea huérfana",
+  "tipo": "subtarea"
+}
+
+### 55. ERROR 400 - Contraseña débil  →  espera 400
+# La contraseña necesita 8 caracteres con letras y números.
+# Permiso: Pública
+POST {{url}}/auth/registro
+Content-Type: application/json
+
+{
+  "nombre": "Pedro",
+  "correo": "pedro@prueba.com",
+  "password": "123"
+}
+
+### 56. ERROR 401 - Sin token  →  espera 401
+# Sin el header Authorization la API rechaza la petición.
+# Permiso: —
+GET {{url}}/proyectos
+
+### 57. ERROR 401 - Contraseña incorrecta  →  espera 401
+# Mensaje genérico: no revela si el correo existe.
+# Permiso: Pública
+POST {{url}}/auth/login
+Content-Type: application/json
+
+{
+  "correo": "ana@prueba.com",
+  "password": "Incorrecta1"
+}
+
+### 58. ERROR 403 - Observadora intenta crear tarea  →  espera 403
+# Sofía es observadora: solo puede ver.
+# Permiso: miembro, admin
+POST {{url}}/proyectos/{{pid}}/tareas
+Authorization: Bearer {{token_sofia}}
+Content-Type: application/json
+
+{
+  "titulo": "Intento de Sofía"
+}
+
+### 59. ERROR 403 - Miembro intenta agregar miembros  →  espera 403
+# Solo un admin gestiona miembros.
+# Permiso: admin
+POST {{url}}/proyectos/{{pid}}/miembros
+Authorization: Bearer {{token_luis}}
+Content-Type: application/json
+
+{
+  "correo": "sofia@prueba.com"
+}
+
+### 60. ERROR 409 - Clave de proyecto repetida  →  espera 409
+# La clave WEB ya existe.
+# Permiso: Cualquier usuario con token
+POST {{url}}/proyectos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "clave": "WEB",
+  "nombre": "Otro proyecto"
+}
+
+### 61. ERROR 400 - Asignar a alguien que no es miembro  →  espera 400
+# Solo se puede asignar a miembros del proyecto. (id 999999 no existe)
+# Permiso: miembro, admin
+PATCH {{url}}/tareas/{{tid3}}/asignar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "asignado_id": 999999
+}
+
+
+### =====================================================================
+### 10. ELIMINAR (AL FINAL)
+### Borran datos. Ejecútalas solo cuando termines de probar.
+### =====================================================================
+
+### 62. Eliminar comentario  →  espera 204
+# Responde 204 sin contenido.
+# Permiso: Autor o admin
+DELETE {{url}}/comentarios/{{cid}}
+Authorization: Bearer {{token}}
+
+### 63. Eliminar etiqueta  →  espera 204
+# También la quita de las tareas.
+# Permiso: admin
+DELETE {{url}}/proyectos/{{pid}}/etiquetas/{{eid2}}
+Authorization: Bearer {{token}}
+
+### 64. Eliminar tarea  →  espera 204
+# Borra la tarea y sus subtareas.
+# Permiso: Creador de la tarea o admin
+DELETE {{url}}/tareas/{{tid3}}
+Authorization: Bearer {{token}}
+
+### 65. Crear sprint para eliminar  →  espera 201
+# Sprint auxiliar. Guarda su id en {{sid2}}.
+# Permiso: admin
+# @name crearSprintParaEliminar
+POST {{url}}/proyectos/{{pid}}/sprints
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "objetivo": "Sprint de prueba"
+}
+
+### 66. Eliminar sprint  →  espera 204
+# Solo sprints planificados. Sus tareas vuelven al backlog.
+# Permiso: admin
+DELETE {{url}}/sprints/{{sid2}}
+Authorization: Bearer {{token}}
+
+### 67. Quitar a Sofía del proyecto  →  espera 204
+# Sus tareas abiertas quedan sin asignar.
+# Permiso: admin (o uno mismo para salir)
+DELETE {{url}}/proyectos/{{pid}}/miembros/{{sofia_id}}
+Authorization: Bearer {{token}}
+
+### 68. Eliminar proyecto  →  espera 204
+# ⚠ Borra el proyecto con TODAS sus tareas, sprints y comentarios.
+# Permiso: admin
+DELETE {{url}}/proyectos/{{pid}}
+Authorization: Bearer {{token}}

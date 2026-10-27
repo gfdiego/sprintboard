@@ -1,0 +1,18 @@
+# Dependencias (se recrean con npm install)
+node_modules/
+
+# Variables de entorno: contraseñas y secretos. Nunca se suben.
+.env
+.env.*
+!.env.example
+
+# Generados
+dist/
+coverage/
+*.log
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json

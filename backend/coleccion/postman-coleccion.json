@@ -1,0 +1,2840 @@
+{
+  "info": {
+    "name": "SprintBoard API",
+    "_postman_id": "cd190992-7ee7-4db9-b744-81c6843ed795",
+    "description": "Colección de pruebas de SprintBoard. Ejecuta las carpetas en orden.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "url",
+      "value": "http://localhost:3000/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "token_luis",
+      "value": ""
+    },
+    {
+      "key": "token_sofia",
+      "value": ""
+    },
+    {
+      "key": "ana_id",
+      "value": ""
+    },
+    {
+      "key": "luis_id",
+      "value": ""
+    },
+    {
+      "key": "sofia_id",
+      "value": ""
+    },
+    {
+      "key": "pid",
+      "value": ""
+    },
+    {
+      "key": "sid",
+      "value": ""
+    },
+    {
+      "key": "sid2",
+      "value": ""
+    },
+    {
+      "key": "tid",
+      "value": ""
+    },
+    {
+      "key": "tid2",
+      "value": ""
+    },
+    {
+      "key": "tid3",
+      "value": ""
+    },
+    {
+      "key": "epica_id",
+      "value": ""
+    },
+    {
+      "key": "sub_id",
+      "value": ""
+    },
+    {
+      "key": "cid",
+      "value": ""
+    },
+    {
+      "key": "eid",
+      "value": ""
+    },
+    {
+      "key": "eid2",
+      "value": ""
+    },
+    {
+      "key": "sesion_id",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Inicio",
+      "description": "Comprobar que el servidor está encendido. No requieren token.",
+      "item": [
+        {
+          "name": "Estado del servidor",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Responde `{ \"estado\": \"ok\" }` si la API está encendida.\n\nPermiso: Pública",
+            "url": {
+              "raw": "{{url}}/salud",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "salud"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Información de la API",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Muestra el nombre de la API y cuáles rutas son públicas.\n\nPermiso: Pública",
+            "url": {
+              "raw": "{{url}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": []
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "1. Autenticación",
+      "description": "Registro e inicio de sesión. Guardan automáticamente el token y el id de cada usuario.",
+      "item": [
+        {
+          "name": "Registrar a Ana (admin)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Crea la cuenta de Ana. Si ya existe responde 409: usa \"Login Ana\".\n\nPermiso: Pública",
+            "url": {
+              "raw": "{{url}}/auth/registro",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "registro"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana Pérez\",\n  \"correo\": \"ana@prueba.com\",\n  \"password\": \"Clave1234\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "if (json && json.accessToken !== undefined) pm.collectionVariables.set('token', json.accessToken);",
+                  "if (json && json.usuario && json.id !== undefined) pm.collectionVariables.set('ana_id', json.usuario.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Registrar a Luis (miembro)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Crea la cuenta de Luis.\n\nPermiso: Pública",
+            "url": {
+              "raw": "{{url}}/auth/registro",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "registro"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Luis Gómez\",\n  \"correo\": \"luis@prueba.com\",\n  \"password\": \"Clave1234\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "if (json && json.accessToken !== undefined) pm.collectionVariables.set('token_luis', json.accessToken);",
+                  "if (json && json.usuario && json.id !== undefined) pm.collectionVariables.set('luis_id', json.usuario.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Registrar a Sofía (observadora)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Crea la cuenta de Sofía.\n\nPermiso: Pública",
+            "url": {
+              "raw": "{{url}}/auth/registro",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "registro"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Sofía Ramírez\",\n  \"correo\": \"sofia@prueba.com\",\n  \"password\": \"Clave1234\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "if (json && json.accessToken !== undefined) pm.collectionVariables.set('token_sofia', json.accessToken);",
+                  "if (json && json.usuario && json.id !== undefined) pm.collectionVariables.set('sofia_id', json.usuario.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login Ana",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Inicia sesión y guarda `{{token}}`, que usan por defecto todas las peticiones.\n\nPermiso: Pública",
+            "url": {
+              "raw": "{{url}}/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"ana@prueba.com\",\n  \"password\": \"Clave1234\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "if (json && json.accessToken !== undefined) pm.collectionVariables.set('token', json.accessToken);",
+                  "if (json && json.usuario && json.id !== undefined) pm.collectionVariables.set('ana_id', json.usuario.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login Luis",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Guarda `{{token_luis}}`.\n\nPermiso: Pública",
+            "url": {
+              "raw": "{{url}}/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"luis@prueba.com\",\n  \"password\": \"Clave1234\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "if (json && json.accessToken !== undefined) pm.collectionVariables.set('token_luis', json.accessToken);",
+                  "if (json && json.usuario && json.id !== undefined) pm.collectionVariables.set('luis_id', json.usuario.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login Sofía",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Guarda `{{token_sofia}}`.\n\nPermiso: Pública",
+            "url": {
+              "raw": "{{url}}/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"sofia@prueba.com\",\n  \"password\": \"Clave1234\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "if (json && json.accessToken !== undefined) pm.collectionVariables.set('token_sofia', json.accessToken);",
+                  "if (json && json.usuario && json.id !== undefined) pm.collectionVariables.set('sofia_id', json.usuario.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mi usuario (yo)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Devuelve los datos del dueño del token.\n\nPermiso: Cualquier usuario con token",
+            "url": {
+              "raw": "{{url}}/auth/yo",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "yo"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Renovar access token (refresh)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Usa la cookie httpOnly `refreshToken` del último login (Postman la guarda sola) y devuelve un `accessToken` nuevo, que se guarda en `{{token}}`. La cookie se rota: el refresh anterior deja de servir.\n\nPermiso: Pública (requiere la cookie)",
+            "url": {
+              "raw": "{{url}}/auth/refresh",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "refresh"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "if (json && json.accessToken !== undefined) pm.collectionVariables.set('token', json.accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mis sesiones abiertas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Lista los dispositivos con sesión abierta y guarda el primero en `{{sesion_id}}`. `actual: true` marca esta sesión.\n\nPermiso: Cualquier usuario con token",
+            "url": {
+              "raw": "{{url}}/auth/sesiones",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "sesiones"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "if (Array.isArray(json) && json.length) pm.collectionVariables.set('sesion_id', json[0].id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cerrar una sesión",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "Cierra el dispositivo `{{sesion_id}}`.\n\nPermiso: El dueño de la sesión",
+            "url": {
+              "raw": "{{url}}/auth/sesiones/{{sesion_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "sesiones",
+                "{{sesion_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cerrar sesión en todos los dispositivos",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Revoca todas las sesiones del usuario. Ejecuta *Login Ana* después para seguir probando.\n\nPermiso: Cualquier usuario con token",
+            "url": {
+              "raw": "{{url}}/auth/logout-todas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "logout-todas"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cerrar sesión (logout)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Revoca el refresh token de la cookie y la borra. Después, *Renovar access token* responde 401. Ejecuta *Login Ana* para seguir probando.\n\nPermiso: Pública",
+            "url": {
+              "raw": "{{url}}/auth/logout",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Proyectos",
+      "description": "Quien crea el proyecto queda como admin.",
+      "item": [
+        {
+          "name": "Crear proyecto",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Crea el proyecto y guarda su id en `{{pid}}`. La clave (2-10 letras/números) se usa en las tareas: WEB-1, WEB-2…\n\nPermiso: Cualquier usuario con token",
+            "url": {
+              "raw": "{{url}}/proyectos",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clave\": \"WEB\",\n  \"nombre\": \"Sitio web corporativo\",\n  \"descripcion\": \"Rediseño del sitio web de la empresa\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "if (json && json.id !== undefined) pm.collectionVariables.set('pid', json.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar mis proyectos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Proyectos donde soy miembro, con mi rol y cuántas tareas siguen abiertas.\n\nPermiso: Cualquier usuario con token",
+            "url": {
+              "raw": "{{url}}/proyectos",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ver proyecto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Detalle del proyecto, con el sprint activo si existe.\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar proyecto",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "description": "Cambia el nombre o la descripción. La clave no se puede cambiar.\n\nPermiso: admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descripcion\": \"Rediseño completo del sitio y del blog\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. Miembros",
+      "description": "Agregar personas al proyecto (deben estar registradas) y darles un rol.",
+      "item": [
+        {
+          "name": "Agregar a Luis como miembro",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Se agrega por correo. `capacidad_puntos` = cuántos puntos puede asumir por sprint.\n\nPermiso: admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/miembros",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "miembros"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"luis@prueba.com\",\n  \"rol\": \"miembro\",\n  \"capacidad_puntos\": 8\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Agregar a Sofía como observadora",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Un observador solo puede ver.\n\nPermiso: admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/miembros",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "miembros"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"sofia@prueba.com\",\n  \"rol\": \"observador\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar miembros",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Miembros con su rol y capacidad.\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/miembros",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "miembros"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cambiar capacidad de Luis",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "description": "Cambia el rol y/o la capacidad de puntos.\n\nPermiso: admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/miembros/{{luis_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "miembros",
+                "{{luis_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"capacidad_puntos\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4. Etiquetas",
+      "description": "Etiquetas de color para clasificar tareas.",
+      "item": [
+        {
+          "name": "Crear etiqueta",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Guarda su id en `{{eid}}`. El color va en formato #RRGGBB.\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/etiquetas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "etiquetas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"frontend\",\n  \"color\": \"#3b82f6\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "if (json && json.id !== undefined) pm.collectionVariables.set('eid', json.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear otra etiqueta",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Guarda su id en `{{eid2}}`.\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/etiquetas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "etiquetas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"urgente\",\n  \"color\": \"#ef4444\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "if (json && json.id !== undefined) pm.collectionVariables.set('eid2', json.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar etiquetas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Etiquetas del proyecto y en cuántas tareas se usan.\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/etiquetas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "etiquetas"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "5. Sprints",
+      "description": "Iteraciones de trabajo. Solo puede haber un sprint activo por proyecto.",
+      "item": [
+        {
+          "name": "Crear sprint",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Guarda su id en `{{sid}}`. Si no envías nombre se llama \"Sprint N\". Fechas en formato AAAA-MM-DD (opcionales).\n\nPermiso: admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/sprints",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "sprints"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Sprint 1\",\n  \"objetivo\": \"Página de inicio y login\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "if (json && json.id !== undefined) pm.collectionVariables.set('sid', json.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar sprints",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Sprints con totales de tareas y puntos.\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/sprints",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "sprints"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ver sprint",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Detalle del sprint con su resumen.\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/sprints/{{sid}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "sprints",
+                "{{sid}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar sprint",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "description": "No se puede editar un sprint cerrado.\n\nPermiso: admin",
+            "url": {
+              "raw": "{{url}}/sprints/{{sid}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "sprints",
+                "{{sid}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"objetivo\": \"Página de inicio, login y formulario de contacto\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "6. Tareas",
+      "description": "Crear, estimar (puntos), asignar y mover tareas.",
+      "item": [
+        {
+          "name": "Crear épica",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Una épica agrupa varias historias. Guarda su id en `{{epica_id}}`.\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/tareas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "tareas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Autenticación de usuarios\",\n  \"tipo\": \"epica\",\n  \"prioridad\": \"alta\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "if (json && json.id !== undefined) pm.collectionVariables.set('epica_id', json.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear historia (con puntos, asignada y en el sprint)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Tarea completa: dificultad de 5 puntos, asignada a Luis, dentro del sprint, hija de la épica y con etiqueta. Guarda su id en `{{tid}}`.\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/tareas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "tareas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Pantalla de inicio de sesión\",\n  \"descripcion\": \"Formulario con correo y contraseña, con validaciones\",\n  \"tipo\": \"historia\",\n  \"prioridad\": \"alta\",\n  \"puntos\": 5,\n  \"asignado_id\": {{luis_id}},\n  \"sprint_id\": {{sid}},\n  \"padre_id\": {{epica_id}},\n  \"fecha_limite\": \"2026-12-15\",\n  \"etiquetas\": [\n    {{eid}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "if (json && json.id !== undefined) pm.collectionVariables.set('tid', json.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear bug",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Bug crítico de 3 puntos en el sprint, sin asignar. Guarda su id en `{{tid2}}`.\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/tareas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "tareas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"El menú no se ve en celulares\",\n  \"tipo\": \"bug\",\n  \"prioridad\": \"critica\",\n  \"puntos\": 3,\n  \"sprint_id\": {{sid}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "if (json && json.id !== undefined) pm.collectionVariables.set('tid2', json.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear subtarea",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Una subtarea siempre necesita `padre_id`. Guarda su id en `{{sub_id}}`.\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/tareas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "tareas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Validar formato del correo\",\n  \"tipo\": \"subtarea\",\n  \"puntos\": 1,\n  \"padre_id\": {{tid}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "if (json && json.id !== undefined) pm.collectionVariables.set('sub_id', json.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear tarea para el backlog",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Sin `sprint_id` la tarea queda en el backlog. Guarda su id en `{{tid3}}`.\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/tareas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "tareas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Optimizar imágenes del sitio\",\n  \"tipo\": \"tarea\",\n  \"prioridad\": \"baja\",\n  \"puntos\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "if (json && json.id !== undefined) pm.collectionVariables.set('tid3', json.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar todas las tareas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Ordenadas por prioridad. Acepta filtros (ver las siguientes peticiones).\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/tareas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "tareas"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Filtrar: mis tareas (como Luis)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Filtros: `asignado=yo|ninguno|<id>`, `estado`, `sprint=backlog|<id>`, `tipo`, `prioridad`, `q` (texto o clave).\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/tareas?asignado=yo",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "tareas"
+              ],
+              "query": [
+                {
+                  "key": "asignado",
+                  "value": "yo"
+                }
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_luis}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Filtrar: sin asignar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Tareas que nadie tiene asignadas.\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/tareas?asignado=ninguno",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "tareas"
+              ],
+              "query": [
+                {
+                  "key": "asignado",
+                  "value": "ninguno"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Filtrar: bugs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Solo tareas de tipo bug.\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/tareas?tipo=bug",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "tareas"
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "bug"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar por texto o clave",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Busca en el título o en la clave (por ejemplo `q=WEB-2`).\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/tareas?q=login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "tareas"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "login"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ver backlog",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Tareas sin sprint (sin subtareas), con el total de puntos y cuántas faltan por estimar.\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/backlog",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "backlog"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ver tarea",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Detalle con padre, hijas y `puntos_hijas`.\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/tareas/{{tid}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tareas",
+                "{{tid}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar tarea (cambiar puntos y prioridad)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "description": "Campos editables: titulo, descripcion, tipo, prioridad, puntos, sprint_id, padre_id, fecha_limite. Envía solo los que cambian.\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/tareas/{{tid}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tareas",
+                "{{tid}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"puntos\": 8,\n  \"prioridad\": \"critica\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Asignar bug a Luis",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "description": "Si el miembro supera su capacidad de puntos en el sprint, la respuesta trae `advertencia` (aquí: 8 + 3 = 11 > 10).\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/tareas/{{tid2}}/asignar",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tareas",
+                "{{tid2}}",
+                "asignar"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asignado_id\": {{luis_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reasignar bug a Ana",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "description": "Cambia el responsable. Con `null` la tarea queda sin asignar.\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/tareas/{{tid2}}/asignar",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tareas",
+                "{{tid2}}",
+                "asignar"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asignado_id\": {{ana_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mover tarea a \"en progreso\"",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "description": "Estados: por_hacer, en_progreso, en_revision, hecho. `orden` (opcional) es la posición en la columna.\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/tareas/{{tid}}/mover",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tareas",
+                "{{tid}}",
+                "mover"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"en_progreso\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_luis}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mover bug a \"hecho\"",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "description": "Lo usa el tablero Kanban al arrastrar una tarjeta.\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/tareas/{{tid2}}/mover",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tareas",
+                "{{tid2}}",
+                "mover"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"hecho\",\n  \"orden\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Poner etiquetas a una tarea",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "description": "Reemplaza todas las etiquetas de la tarea por la lista enviada.\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/tareas/{{tid2}}/etiquetas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tareas",
+                "{{tid2}}",
+                "etiquetas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"etiquetas\": [\n    {{eid}},\n    {{eid2}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Historial de la tarea",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Todos los cambios: quién, cuándo y qué valores cambiaron.\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/tareas/{{tid}}/historial",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tareas",
+                "{{tid}}",
+                "historial"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "7. Comentarios",
+      "description": "Conversación dentro de una tarea.",
+      "item": [
+        {
+          "name": "Comentar tarea (como Luis)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Guarda el id en `{{cid}}`.\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/tareas/{{tid}}/comentarios",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tareas",
+                "{{tid}}",
+                "comentarios"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contenido\": \"Ya tengo listo el diseño del formulario, empiezo con las validaciones.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_luis}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "if (json && json.id !== undefined) pm.collectionVariables.set('cid', json.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar comentarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Comentarios en orden cronológico.\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/tareas/{{tid}}/comentarios",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tareas",
+                "{{tid}}",
+                "comentarios"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar comentario (como Luis)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "description": "Solo el autor puede editarlo.\n\nPermiso: Solo el autor",
+            "url": {
+              "raw": "{{url}}/comentarios/{{cid}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "comentarios",
+                "{{cid}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contenido\": \"Diseño listo. Validaciones en progreso, termino mañana.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_luis}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "8. Tablero y reportes",
+      "description": "Vistas para el tablero Kanban y las métricas del equipo.",
+      "item": [
+        {
+          "name": "Iniciar sprint",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Pone el sprint en \"activo\" con fecha de inicio hoy. `fecha_fin` es opcional (por defecto, 2 semanas).\n\nPermiso: admin",
+            "url": {
+              "raw": "{{url}}/sprints/{{sid}}/iniciar",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "sprints",
+                "{{sid}}",
+                "iniciar"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tablero Kanban",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Tareas del sprint agrupadas en columnas por estado.\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/sprints/{{sid}}/tablero",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "sprints",
+                "{{sid}}",
+                "tablero"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Carga por miembro",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Puntos asignados frente a la capacidad de cada miembro en el sprint activo (o `?sprint=<id>`).\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/reportes/carga",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "reportes",
+                "carga"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Burndown del sprint",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Puntos restantes por día y la línea ideal. Los días futuros vienen con `restante: null`.\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/sprints/{{sid}}/reportes/burndown",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "sprints",
+                "{{sid}}",
+                "reportes",
+                "burndown"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cerrar sprint",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Cierra el sprint. Las tareas que no están en \"hecho\" vuelven al backlog.\n\nPermiso: admin",
+            "url": {
+              "raw": "{{url}}/sprints/{{sid}}/cerrar",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "sprints",
+                "{{sid}}",
+                "cerrar"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Velocidad del equipo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Puntos completados en cada sprint cerrado y el promedio.\n\nPermiso: observador, miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/reportes/velocidad",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "reportes",
+                "velocidad"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "9. Pruebas de errores",
+      "description": "Todas deben FALLAR con el código indicado. Sirven para comprobar las validaciones y los permisos.",
+      "item": [
+        {
+          "name": "ERROR 400 - Puntos inválidos",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "4 no está en la serie 1, 2, 3, 5, 8, 13, 21.\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/tareas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "tareas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Tarea mal estimada\",\n  \"puntos\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ERROR 400 - Subtarea sin padre",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Una subtarea necesita padre_id.\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/tareas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "tareas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Subtarea huérfana\",\n  \"tipo\": \"subtarea\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ERROR 400 - Contraseña débil",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "La contraseña necesita 8 caracteres con letras y números.\n\nPermiso: Pública",
+            "url": {
+              "raw": "{{url}}/auth/registro",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "registro"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Pedro\",\n  \"correo\": \"pedro@prueba.com\",\n  \"password\": \"123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ERROR 401 - Sin token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Sin el header Authorization la API rechaza la petición.\n\nPermiso: —",
+            "url": {
+              "raw": "{{url}}/proyectos",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 401', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ERROR 401 - Contraseña incorrecta",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Mensaje genérico: no revela si el correo existe.\n\nPermiso: Pública",
+            "url": {
+              "raw": "{{url}}/auth/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"ana@prueba.com\",\n  \"password\": \"Incorrecta1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 401', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ERROR 403 - Observadora intenta crear tarea",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Sofía es observadora: solo puede ver.\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/tareas",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "tareas"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Intento de Sofía\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_sofia}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ERROR 403 - Miembro intenta agregar miembros",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Solo un admin gestiona miembros.\n\nPermiso: admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/miembros",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "miembros"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"sofia@prueba.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_luis}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ERROR 409 - Clave de proyecto repetida",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "La clave WEB ya existe.\n\nPermiso: Cualquier usuario con token",
+            "url": {
+              "raw": "{{url}}/proyectos",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clave\": \"WEB\",\n  \"nombre\": \"Otro proyecto\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ERROR 400 - Asignar a alguien que no es miembro",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "description": "Solo se puede asignar a miembros del proyecto. (id 999999 no existe)\n\nPermiso: miembro, admin",
+            "url": {
+              "raw": "{{url}}/tareas/{{tid3}}/asignar",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tareas",
+                "{{tid3}}",
+                "asignar"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asignado_id\": 999999\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "10. Eliminar (al final)",
+      "description": "Borran datos. Ejecútalas solo cuando termines de probar.",
+      "item": [
+        {
+          "name": "Eliminar comentario",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "Responde 204 sin contenido.\n\nPermiso: Autor o admin",
+            "url": {
+              "raw": "{{url}}/comentarios/{{cid}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "comentarios",
+                "{{cid}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar etiqueta",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "También la quita de las tareas.\n\nPermiso: admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/etiquetas/{{eid2}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "etiquetas",
+                "{{eid2}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar tarea",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "Borra la tarea y sus subtareas.\n\nPermiso: Creador de la tarea o admin",
+            "url": {
+              "raw": "{{url}}/tareas/{{tid3}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "tareas",
+                "{{tid3}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear sprint para eliminar",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Sprint auxiliar. Guarda su id en `{{sid2}}`.\n\nPermiso: admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/sprints",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "sprints"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"objetivo\": \"Sprint de prueba\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 201', () => pm.response.to.have.status(201));",
+                  "const json = pm.response.json();",
+                  "if (json && json.id !== undefined) pm.collectionVariables.set('sid2', json.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar sprint",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "Solo sprints planificados. Sus tareas vuelven al backlog.\n\nPermiso: admin",
+            "url": {
+              "raw": "{{url}}/sprints/{{sid2}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "sprints",
+                "{{sid2}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Quitar a Sofía del proyecto",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "Sus tareas abiertas quedan sin asignar.\n\nPermiso: admin (o uno mismo para salir)",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}/miembros/{{sofia_id}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}",
+                "miembros",
+                "{{sofia_id}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar proyecto",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "⚠ Borra el proyecto con TODAS sus tareas, sprints y comentarios.\n\nPermiso: admin",
+            "url": {
+              "raw": "{{url}}/proyectos/{{pid}}",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "proyectos",
+                "{{pid}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Responde 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

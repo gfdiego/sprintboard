@@ -1,0 +1,1844 @@
+{
+  "clientName": "Thunder Client",
+  "collectionName": "SprintBoard API",
+  "collectionId": "2519553b-45ea-41f8-b323-02bc7220df25",
+  "dateExported": "2026-10-17T06:01:42.158Z",
+  "version": "1.2",
+  "folders": [
+    {
+      "_id": "bd7070ff-fd83-4d9a-9248-82b899c1f0f8",
+      "name": "0. Inicio",
+      "containerId": "",
+      "created": "2026-10-17T06:01:42.158Z",
+      "sortNum": 10000
+    },
+    {
+      "_id": "806a94a3-a892-46a8-b14b-148205dd3332",
+      "name": "1. Autenticación",
+      "containerId": "",
+      "created": "2026-10-17T06:01:42.158Z",
+      "sortNum": 20000
+    },
+    {
+      "_id": "8cdac80c-1f8e-4a8d-8723-9c869fe57035",
+      "name": "2. Proyectos",
+      "containerId": "",
+      "created": "2026-10-17T06:01:42.158Z",
+      "sortNum": 30000
+    },
+    {
+      "_id": "fe6e9ec8-5fac-4fe5-8cbb-394ab9ebd9cc",
+      "name": "3. Miembros",
+      "containerId": "",
+      "created": "2026-10-17T06:01:42.158Z",
+      "sortNum": 40000
+    },
+    {
+      "_id": "ccb7836c-bbe6-469b-85ad-a485d3a361a5",
+      "name": "4. Etiquetas",
+      "containerId": "",
+      "created": "2026-10-17T06:01:42.158Z",
+      "sortNum": 50000
+    },
+    {
+      "_id": "c87ab690-e518-4b2b-9e17-bb384a398836",
+      "name": "5. Sprints",
+      "containerId": "",
+      "created": "2026-10-17T06:01:42.158Z",
+      "sortNum": 60000
+    },
+    {
+      "_id": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "6. Tareas",
+      "containerId": "",
+      "created": "2026-10-17T06:01:42.158Z",
+      "sortNum": 70000
+    },
+    {
+      "_id": "d5d68701-77d9-4d24-8a74-03eb80867ee3",
+      "name": "7. Comentarios",
+      "containerId": "",
+      "created": "2026-10-17T06:01:42.158Z",
+      "sortNum": 80000
+    },
+    {
+      "_id": "7195d80b-d3d0-4539-a365-86da85c51670",
+      "name": "8. Tablero y reportes",
+      "containerId": "",
+      "created": "2026-10-17T06:01:42.158Z",
+      "sortNum": 90000
+    },
+    {
+      "_id": "8a2e3336-96ab-47af-b59f-ffb1dab136c7",
+      "name": "9. Pruebas de errores",
+      "containerId": "",
+      "created": "2026-10-17T06:01:42.158Z",
+      "sortNum": 100000
+    },
+    {
+      "_id": "0b395007-c840-4528-a801-1a43181f1349",
+      "name": "10. Eliminar (al final)",
+      "containerId": "",
+      "created": "2026-10-17T06:01:42.158Z",
+      "sortNum": 110000
+    }
+  ],
+  "requests": [
+    {
+      "_id": "0d3c1130-852e-487d-8d0b-097e9c0e00d1",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "bd7070ff-fd83-4d9a-9248-82b899c1f0f8",
+      "name": "Estado del servidor",
+      "url": "{{url}}/salud",
+      "method": "GET",
+      "sortNum": 10000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "auth": {
+        "type": "none"
+      }
+    },
+    {
+      "_id": "bbc2baa1-8988-40c6-9a2e-49cccd6a1fd6",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "bd7070ff-fd83-4d9a-9248-82b899c1f0f8",
+      "name": "Información de la API",
+      "url": "{{url}}",
+      "method": "GET",
+      "sortNum": 20000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "auth": {
+        "type": "none"
+      }
+    },
+    {
+      "_id": "4a92f669-fcea-42c9-9d89-f8595acc55bf",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "806a94a3-a892-46a8-b14b-148205dd3332",
+      "name": "Registrar a Ana (admin)",
+      "url": "{{url}}/auth/registro",
+      "method": "POST",
+      "sortNum": 10000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.accessToken",
+          "action": "setto",
+          "value": "{{token}}"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.usuario.id",
+          "action": "setto",
+          "value": "{{ana_id}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"nombre\": \"Ana Pérez\",\n  \"correo\": \"ana@prueba.com\",\n  \"password\": \"Clave1234\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "none"
+      }
+    },
+    {
+      "_id": "0434c427-37d2-4044-9a03-6dd4b8707d5f",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "806a94a3-a892-46a8-b14b-148205dd3332",
+      "name": "Registrar a Luis (miembro)",
+      "url": "{{url}}/auth/registro",
+      "method": "POST",
+      "sortNum": 20000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.accessToken",
+          "action": "setto",
+          "value": "{{token_luis}}"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.usuario.id",
+          "action": "setto",
+          "value": "{{luis_id}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"nombre\": \"Luis Gómez\",\n  \"correo\": \"luis@prueba.com\",\n  \"password\": \"Clave1234\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "none"
+      }
+    },
+    {
+      "_id": "5ec18303-4362-4d2a-a1d0-0ac68dcfec48",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "806a94a3-a892-46a8-b14b-148205dd3332",
+      "name": "Registrar a Sofía (observadora)",
+      "url": "{{url}}/auth/registro",
+      "method": "POST",
+      "sortNum": 30000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.accessToken",
+          "action": "setto",
+          "value": "{{token_sofia}}"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.usuario.id",
+          "action": "setto",
+          "value": "{{sofia_id}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"nombre\": \"Sofía Ramírez\",\n  \"correo\": \"sofia@prueba.com\",\n  \"password\": \"Clave1234\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "none"
+      }
+    },
+    {
+      "_id": "539a6e25-e8a5-426d-bfcf-56fb76726c2a",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "806a94a3-a892-46a8-b14b-148205dd3332",
+      "name": "Login Ana",
+      "url": "{{url}}/auth/login",
+      "method": "POST",
+      "sortNum": 40000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.accessToken",
+          "action": "setto",
+          "value": "{{token}}"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.usuario.id",
+          "action": "setto",
+          "value": "{{ana_id}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"correo\": \"ana@prueba.com\",\n  \"password\": \"Clave1234\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "none"
+      }
+    },
+    {
+      "_id": "385c5d88-36c9-455f-ba1b-1bcb99ec6382",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "806a94a3-a892-46a8-b14b-148205dd3332",
+      "name": "Login Luis",
+      "url": "{{url}}/auth/login",
+      "method": "POST",
+      "sortNum": 50000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.accessToken",
+          "action": "setto",
+          "value": "{{token_luis}}"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.usuario.id",
+          "action": "setto",
+          "value": "{{luis_id}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"correo\": \"luis@prueba.com\",\n  \"password\": \"Clave1234\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "none"
+      }
+    },
+    {
+      "_id": "40a2f4e2-f9b9-4a13-a29d-7de00beb7f5c",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "806a94a3-a892-46a8-b14b-148205dd3332",
+      "name": "Login Sofía",
+      "url": "{{url}}/auth/login",
+      "method": "POST",
+      "sortNum": 60000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.accessToken",
+          "action": "setto",
+          "value": "{{token_sofia}}"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.usuario.id",
+          "action": "setto",
+          "value": "{{sofia_id}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"correo\": \"sofia@prueba.com\",\n  \"password\": \"Clave1234\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "none"
+      }
+    },
+    {
+      "_id": "2ebba542-9a4c-40f3-9c21-26e0d97fe820",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "806a94a3-a892-46a8-b14b-148205dd3332",
+      "name": "Mi usuario (yo)",
+      "url": "{{url}}/auth/yo",
+      "method": "GET",
+      "sortNum": 70000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "5af3225f-ada8-49ef-a96e-a5cb9c0150c7",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "8cdac80c-1f8e-4a8d-8723-9c869fe57035",
+      "name": "Crear proyecto",
+      "url": "{{url}}/proyectos",
+      "method": "POST",
+      "sortNum": 10000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.id",
+          "action": "setto",
+          "value": "{{pid}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"clave\": \"WEB\",\n  \"nombre\": \"Sitio web corporativo\",\n  \"descripcion\": \"Rediseño del sitio web de la empresa\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "6eab6f1c-9bf8-42ce-8293-c3066d11c646",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "8cdac80c-1f8e-4a8d-8723-9c869fe57035",
+      "name": "Listar mis proyectos",
+      "url": "{{url}}/proyectos",
+      "method": "GET",
+      "sortNum": 20000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "454931d6-1fd6-43e4-9878-1eeeb0a6e4cf",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "8cdac80c-1f8e-4a8d-8723-9c869fe57035",
+      "name": "Ver proyecto",
+      "url": "{{url}}/proyectos/{{pid}}",
+      "method": "GET",
+      "sortNum": 30000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "a4b692ac-dd5b-4318-aea4-fbbd17495eb8",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "8cdac80c-1f8e-4a8d-8723-9c869fe57035",
+      "name": "Editar proyecto",
+      "url": "{{url}}/proyectos/{{pid}}",
+      "method": "PATCH",
+      "sortNum": 40000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"descripcion\": \"Rediseño completo del sitio y del blog\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "ff2dca77-c4f8-45e9-9a37-9eb7eb3e62d6",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "fe6e9ec8-5fac-4fe5-8cbb-394ab9ebd9cc",
+      "name": "Agregar a Luis como miembro",
+      "url": "{{url}}/proyectos/{{pid}}/miembros",
+      "method": "POST",
+      "sortNum": 10000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"correo\": \"luis@prueba.com\",\n  \"rol\": \"miembro\",\n  \"capacidad_puntos\": 8\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "72efdead-c856-493a-ab37-eab6ccd13c65",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "fe6e9ec8-5fac-4fe5-8cbb-394ab9ebd9cc",
+      "name": "Agregar a Sofía como observadora",
+      "url": "{{url}}/proyectos/{{pid}}/miembros",
+      "method": "POST",
+      "sortNum": 20000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"correo\": \"sofia@prueba.com\",\n  \"rol\": \"observador\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "187d2b92-3b39-466a-ada8-3d8a7c1b2091",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "fe6e9ec8-5fac-4fe5-8cbb-394ab9ebd9cc",
+      "name": "Listar miembros",
+      "url": "{{url}}/proyectos/{{pid}}/miembros",
+      "method": "GET",
+      "sortNum": 30000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "3f74afd6-b128-4cc2-8d57-8d22a34dbca3",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "fe6e9ec8-5fac-4fe5-8cbb-394ab9ebd9cc",
+      "name": "Cambiar capacidad de Luis",
+      "url": "{{url}}/proyectos/{{pid}}/miembros/{{luis_id}}",
+      "method": "PATCH",
+      "sortNum": 40000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"capacidad_puntos\": 10\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "54e827a9-56fb-49ff-91ce-445f80a87241",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "ccb7836c-bbe6-469b-85ad-a485d3a361a5",
+      "name": "Crear etiqueta",
+      "url": "{{url}}/proyectos/{{pid}}/etiquetas",
+      "method": "POST",
+      "sortNum": 10000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.id",
+          "action": "setto",
+          "value": "{{eid}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"nombre\": \"frontend\",\n  \"color\": \"#3b82f6\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "7e8f9c03-fab5-4846-8fa4-aca372950d27",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "ccb7836c-bbe6-469b-85ad-a485d3a361a5",
+      "name": "Crear otra etiqueta",
+      "url": "{{url}}/proyectos/{{pid}}/etiquetas",
+      "method": "POST",
+      "sortNum": 20000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.id",
+          "action": "setto",
+          "value": "{{eid2}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"nombre\": \"urgente\",\n  \"color\": \"#ef4444\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "40d294ec-c2a3-4238-8bbe-3f9f6b1e97b7",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "ccb7836c-bbe6-469b-85ad-a485d3a361a5",
+      "name": "Listar etiquetas",
+      "url": "{{url}}/proyectos/{{pid}}/etiquetas",
+      "method": "GET",
+      "sortNum": 30000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "3ae40632-0362-44ab-99e3-dd36b5471145",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "c87ab690-e518-4b2b-9e17-bb384a398836",
+      "name": "Crear sprint",
+      "url": "{{url}}/proyectos/{{pid}}/sprints",
+      "method": "POST",
+      "sortNum": 10000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.id",
+          "action": "setto",
+          "value": "{{sid}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"nombre\": \"Sprint 1\",\n  \"objetivo\": \"Página de inicio y login\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "37aff10a-ab70-43b4-802f-15bfb600e07a",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "c87ab690-e518-4b2b-9e17-bb384a398836",
+      "name": "Listar sprints",
+      "url": "{{url}}/proyectos/{{pid}}/sprints",
+      "method": "GET",
+      "sortNum": 20000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "f5ddd430-f398-4471-b234-fc669c56ac03",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "c87ab690-e518-4b2b-9e17-bb384a398836",
+      "name": "Ver sprint",
+      "url": "{{url}}/sprints/{{sid}}",
+      "method": "GET",
+      "sortNum": 30000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "50ac79a4-ebfc-46e6-8a1e-409005c8be99",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "c87ab690-e518-4b2b-9e17-bb384a398836",
+      "name": "Editar sprint",
+      "url": "{{url}}/sprints/{{sid}}",
+      "method": "PATCH",
+      "sortNum": 40000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"objetivo\": \"Página de inicio, login y formulario de contacto\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "6fc0a6b8-16c3-48c5-9ffa-ecabc7991368",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Crear épica",
+      "url": "{{url}}/proyectos/{{pid}}/tareas",
+      "method": "POST",
+      "sortNum": 10000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.id",
+          "action": "setto",
+          "value": "{{epica_id}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"titulo\": \"Autenticación de usuarios\",\n  \"tipo\": \"epica\",\n  \"prioridad\": \"alta\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "53c22fd3-f492-4aea-9fff-526eec299d56",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Crear historia (con puntos, asignada y en el sprint)",
+      "url": "{{url}}/proyectos/{{pid}}/tareas",
+      "method": "POST",
+      "sortNum": 20000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.id",
+          "action": "setto",
+          "value": "{{tid}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"titulo\": \"Pantalla de inicio de sesión\",\n  \"descripcion\": \"Formulario con correo y contraseña, con validaciones\",\n  \"tipo\": \"historia\",\n  \"prioridad\": \"alta\",\n  \"puntos\": 5,\n  \"asignado_id\": {{luis_id}},\n  \"sprint_id\": {{sid}},\n  \"padre_id\": {{epica_id}},\n  \"fecha_limite\": \"2026-12-15\",\n  \"etiquetas\": [\n    {{eid}}\n  ]\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "01c0156b-b06e-483e-a789-350477bdf189",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Crear bug",
+      "url": "{{url}}/proyectos/{{pid}}/tareas",
+      "method": "POST",
+      "sortNum": 30000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.id",
+          "action": "setto",
+          "value": "{{tid2}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"titulo\": \"El menú no se ve en celulares\",\n  \"tipo\": \"bug\",\n  \"prioridad\": \"critica\",\n  \"puntos\": 3,\n  \"sprint_id\": {{sid}}\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "21b11ffc-8eaf-4276-9db0-36f978527eec",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Crear subtarea",
+      "url": "{{url}}/proyectos/{{pid}}/tareas",
+      "method": "POST",
+      "sortNum": 40000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.id",
+          "action": "setto",
+          "value": "{{sub_id}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"titulo\": \"Validar formato del correo\",\n  \"tipo\": \"subtarea\",\n  \"puntos\": 1,\n  \"padre_id\": {{tid}}\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "2859db00-df55-4fdd-a3e5-0eca780d8a93",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Crear tarea para el backlog",
+      "url": "{{url}}/proyectos/{{pid}}/tareas",
+      "method": "POST",
+      "sortNum": 50000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.id",
+          "action": "setto",
+          "value": "{{tid3}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"titulo\": \"Optimizar imágenes del sitio\",\n  \"tipo\": \"tarea\",\n  \"prioridad\": \"baja\",\n  \"puntos\": 2\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "3955532b-9624-4de9-8698-0768fa6525b2",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Listar todas las tareas",
+      "url": "{{url}}/proyectos/{{pid}}/tareas",
+      "method": "GET",
+      "sortNum": 60000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "c49a0671-40a8-4554-bd00-ca76c505d4a0",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Filtrar: mis tareas (como Luis)",
+      "url": "{{url}}/proyectos/{{pid}}/tareas?asignado=yo",
+      "method": "GET",
+      "sortNum": 70000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": "{{token_luis}}"
+      }
+    },
+    {
+      "_id": "e0f857f8-a364-4501-98a8-51ea6bd7405e",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Filtrar: sin asignar",
+      "url": "{{url}}/proyectos/{{pid}}/tareas?asignado=ninguno",
+      "method": "GET",
+      "sortNum": 80000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "0480c9ff-1e87-4073-a6cc-d311ec30a644",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Filtrar: bugs",
+      "url": "{{url}}/proyectos/{{pid}}/tareas?tipo=bug",
+      "method": "GET",
+      "sortNum": 90000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "ed52e25a-0307-4c3b-b1e1-374c12c22f9d",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Buscar por texto o clave",
+      "url": "{{url}}/proyectos/{{pid}}/tareas?q=login",
+      "method": "GET",
+      "sortNum": 100000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "cfe17a2a-a4e2-4eae-8b20-a9040fa0ca78",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Ver backlog",
+      "url": "{{url}}/proyectos/{{pid}}/backlog",
+      "method": "GET",
+      "sortNum": 110000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "d07c292e-892d-46a9-a858-8375dac41fa9",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Ver tarea",
+      "url": "{{url}}/tareas/{{tid}}",
+      "method": "GET",
+      "sortNum": 120000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "534cefb8-0458-4e2a-8a35-f8d5a291e4a3",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Editar tarea (cambiar puntos y prioridad)",
+      "url": "{{url}}/tareas/{{tid}}",
+      "method": "PATCH",
+      "sortNum": 130000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"puntos\": 8,\n  \"prioridad\": \"critica\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "4d3d8c01-5b19-4ca1-8712-bdc5399e62cc",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Asignar bug a Luis",
+      "url": "{{url}}/tareas/{{tid2}}/asignar",
+      "method": "PATCH",
+      "sortNum": 140000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"asignado_id\": {{luis_id}}\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "b9677e92-5479-4cb7-a43f-2eec66f22644",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Reasignar bug a Ana",
+      "url": "{{url}}/tareas/{{tid2}}/asignar",
+      "method": "PATCH",
+      "sortNum": 150000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"asignado_id\": {{ana_id}}\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "549f9d67-2f2f-4b6f-ba9e-00be8bf6bf72",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Mover tarea a \"en progreso\"",
+      "url": "{{url}}/tareas/{{tid}}/mover",
+      "method": "PATCH",
+      "sortNum": 160000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"estado\": \"en_progreso\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "bearer",
+        "bearer": "{{token_luis}}"
+      }
+    },
+    {
+      "_id": "f6ed9ad1-5c0c-4fd3-ba56-8b342d59d9bc",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Mover bug a \"hecho\"",
+      "url": "{{url}}/tareas/{{tid2}}/mover",
+      "method": "PATCH",
+      "sortNum": 170000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"estado\": \"hecho\",\n  \"orden\": 0\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "0c52f686-cc4d-4d0b-af0c-e9074e510297",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Poner etiquetas a una tarea",
+      "url": "{{url}}/tareas/{{tid2}}/etiquetas",
+      "method": "PUT",
+      "sortNum": 180000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"etiquetas\": [\n    {{eid}},\n    {{eid2}}\n  ]\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "d16ebfe2-3efd-4f3c-9635-f096d06c36f6",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "413a6bd2-3149-447c-a729-1bbe31ae3c2f",
+      "name": "Historial de la tarea",
+      "url": "{{url}}/tareas/{{tid}}/historial",
+      "method": "GET",
+      "sortNum": 190000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "ab2bff76-1d23-43ce-8907-e7485710632c",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "d5d68701-77d9-4d24-8a74-03eb80867ee3",
+      "name": "Comentar tarea (como Luis)",
+      "url": "{{url}}/tareas/{{tid}}/comentarios",
+      "method": "POST",
+      "sortNum": 10000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.id",
+          "action": "setto",
+          "value": "{{cid}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"contenido\": \"Ya tengo listo el diseño del formulario, empiezo con las validaciones.\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "bearer",
+        "bearer": "{{token_luis}}"
+      }
+    },
+    {
+      "_id": "64014ded-c611-48b9-a2f6-2156ca1a1274",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "d5d68701-77d9-4d24-8a74-03eb80867ee3",
+      "name": "Listar comentarios",
+      "url": "{{url}}/tareas/{{tid}}/comentarios",
+      "method": "GET",
+      "sortNum": 20000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "9856ff46-b8db-4a26-ae75-cd294e1441b5",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "d5d68701-77d9-4d24-8a74-03eb80867ee3",
+      "name": "Editar comentario (como Luis)",
+      "url": "{{url}}/comentarios/{{cid}}",
+      "method": "PATCH",
+      "sortNum": 30000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"contenido\": \"Diseño listo. Validaciones en progreso, termino mañana.\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "bearer",
+        "bearer": "{{token_luis}}"
+      }
+    },
+    {
+      "_id": "a5677a44-ed88-4937-a0f9-dfde3e7417c8",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "7195d80b-d3d0-4539-a365-86da85c51670",
+      "name": "Iniciar sprint",
+      "url": "{{url}}/sprints/{{sid}}/iniciar",
+      "method": "POST",
+      "sortNum": 10000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{}",
+        "form": []
+      }
+    },
+    {
+      "_id": "35fb9450-0a8c-4dee-b904-0de6cb95fbbb",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "7195d80b-d3d0-4539-a365-86da85c51670",
+      "name": "Tablero Kanban",
+      "url": "{{url}}/sprints/{{sid}}/tablero",
+      "method": "GET",
+      "sortNum": 20000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "213a4d1f-bde1-4c52-a19c-44f1eeb1a9fe",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "7195d80b-d3d0-4539-a365-86da85c51670",
+      "name": "Carga por miembro",
+      "url": "{{url}}/proyectos/{{pid}}/reportes/carga",
+      "method": "GET",
+      "sortNum": 30000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "21cb1a0e-4558-46a3-833c-7b7399f7c809",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "7195d80b-d3d0-4539-a365-86da85c51670",
+      "name": "Burndown del sprint",
+      "url": "{{url}}/sprints/{{sid}}/reportes/burndown",
+      "method": "GET",
+      "sortNum": 40000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "45bfb14f-9719-4a38-bd8b-df26edd9a1bb",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "7195d80b-d3d0-4539-a365-86da85c51670",
+      "name": "Cerrar sprint",
+      "url": "{{url}}/sprints/{{sid}}/cerrar",
+      "method": "POST",
+      "sortNum": 50000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{}",
+        "form": []
+      }
+    },
+    {
+      "_id": "50f0a8e9-c9d5-4203-a595-44a20f91a8fb",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "7195d80b-d3d0-4539-a365-86da85c51670",
+      "name": "Velocidad del equipo",
+      "url": "{{url}}/proyectos/{{pid}}/reportes/velocidad",
+      "method": "GET",
+      "sortNum": 60000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "200"
+        }
+      ]
+    },
+    {
+      "_id": "7d998921-4036-43ef-bce7-59ec3eb9442c",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "8a2e3336-96ab-47af-b59f-ffb1dab136c7",
+      "name": "ERROR 400 - Puntos inválidos",
+      "url": "{{url}}/proyectos/{{pid}}/tareas",
+      "method": "POST",
+      "sortNum": 10000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"titulo\": \"Tarea mal estimada\",\n  \"puntos\": 4\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "d233e623-1382-4dc8-8f50-2537f60b3ab9",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "8a2e3336-96ab-47af-b59f-ffb1dab136c7",
+      "name": "ERROR 400 - Subtarea sin padre",
+      "url": "{{url}}/proyectos/{{pid}}/tareas",
+      "method": "POST",
+      "sortNum": 20000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"titulo\": \"Subtarea huérfana\",\n  \"tipo\": \"subtarea\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "2a57c385-69fa-4f40-8f11-68609dabe1c0",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "8a2e3336-96ab-47af-b59f-ffb1dab136c7",
+      "name": "ERROR 400 - Contraseña débil",
+      "url": "{{url}}/auth/registro",
+      "method": "POST",
+      "sortNum": 30000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"nombre\": \"Pedro\",\n  \"correo\": \"pedro@prueba.com\",\n  \"password\": \"123\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "none"
+      }
+    },
+    {
+      "_id": "669aff9d-03bd-4793-b61d-bc6e1931c5a9",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "8a2e3336-96ab-47af-b59f-ffb1dab136c7",
+      "name": "ERROR 401 - Sin token",
+      "url": "{{url}}/proyectos",
+      "method": "GET",
+      "sortNum": 40000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "401"
+        }
+      ],
+      "auth": {
+        "type": "none"
+      }
+    },
+    {
+      "_id": "94d419f0-a209-450b-b8ab-8aa0ffc9e55a",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "8a2e3336-96ab-47af-b59f-ffb1dab136c7",
+      "name": "ERROR 401 - Contraseña incorrecta",
+      "url": "{{url}}/auth/login",
+      "method": "POST",
+      "sortNum": 50000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "401"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"correo\": \"ana@prueba.com\",\n  \"password\": \"Incorrecta1\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "none"
+      }
+    },
+    {
+      "_id": "69657cd6-fea9-484a-b483-323225a952a6",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "8a2e3336-96ab-47af-b59f-ffb1dab136c7",
+      "name": "ERROR 403 - Observadora intenta crear tarea",
+      "url": "{{url}}/proyectos/{{pid}}/tareas",
+      "method": "POST",
+      "sortNum": 60000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "403"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"titulo\": \"Intento de Sofía\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "bearer",
+        "bearer": "{{token_sofia}}"
+      }
+    },
+    {
+      "_id": "66527846-5b64-424c-a8c7-117b66807256",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "8a2e3336-96ab-47af-b59f-ffb1dab136c7",
+      "name": "ERROR 403 - Miembro intenta agregar miembros",
+      "url": "{{url}}/proyectos/{{pid}}/miembros",
+      "method": "POST",
+      "sortNum": 70000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "403"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"correo\": \"sofia@prueba.com\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "bearer",
+        "bearer": "{{token_luis}}"
+      }
+    },
+    {
+      "_id": "a5807de9-a0f4-4e6e-808c-7f47713c2f92",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "8a2e3336-96ab-47af-b59f-ffb1dab136c7",
+      "name": "ERROR 409 - Clave de proyecto repetida",
+      "url": "{{url}}/proyectos",
+      "method": "POST",
+      "sortNum": 80000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "409"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"clave\": \"WEB\",\n  \"nombre\": \"Otro proyecto\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "a719b615-2e94-43b1-96ad-59e1444e5dbc",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "8a2e3336-96ab-47af-b59f-ffb1dab136c7",
+      "name": "ERROR 400 - Asignar a alguien que no es miembro",
+      "url": "{{url}}/tareas/{{tid3}}/asignar",
+      "method": "PATCH",
+      "sortNum": 90000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "400"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"asignado_id\": 999999\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "58b07bb1-a9a6-4ede-a13c-1ccb0833401e",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "0b395007-c840-4528-a801-1a43181f1349",
+      "name": "Eliminar comentario",
+      "url": "{{url}}/comentarios/{{cid}}",
+      "method": "DELETE",
+      "sortNum": 10000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "204"
+        }
+      ]
+    },
+    {
+      "_id": "dfc66a68-1960-4f7f-a665-d98051a5a87e",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "0b395007-c840-4528-a801-1a43181f1349",
+      "name": "Eliminar etiqueta",
+      "url": "{{url}}/proyectos/{{pid}}/etiquetas/{{eid2}}",
+      "method": "DELETE",
+      "sortNum": 20000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "204"
+        }
+      ]
+    },
+    {
+      "_id": "94e62800-a325-465f-807c-dddf6d460820",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "0b395007-c840-4528-a801-1a43181f1349",
+      "name": "Eliminar tarea",
+      "url": "{{url}}/tareas/{{tid3}}",
+      "method": "DELETE",
+      "sortNum": 30000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "204"
+        }
+      ]
+    },
+    {
+      "_id": "fb61d948-7054-40cd-b694-523cf1755792",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "0b395007-c840-4528-a801-1a43181f1349",
+      "name": "Crear sprint para eliminar",
+      "url": "{{url}}/proyectos/{{pid}}/sprints",
+      "method": "POST",
+      "sortNum": 40000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "201"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.id",
+          "action": "setto",
+          "value": "{{sid2}}"
+        }
+      ],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"objetivo\": \"Sprint de prueba\"\n}",
+        "form": []
+      }
+    },
+    {
+      "_id": "74d3722a-303d-48db-9f0e-785716b6db1e",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "0b395007-c840-4528-a801-1a43181f1349",
+      "name": "Eliminar sprint",
+      "url": "{{url}}/sprints/{{sid2}}",
+      "method": "DELETE",
+      "sortNum": 50000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "204"
+        }
+      ]
+    },
+    {
+      "_id": "9b63d217-a2ae-4bff-b7f1-ea879f59a644",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "0b395007-c840-4528-a801-1a43181f1349",
+      "name": "Quitar a Sofía del proyecto",
+      "url": "{{url}}/proyectos/{{pid}}/miembros/{{sofia_id}}",
+      "method": "DELETE",
+      "sortNum": 60000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "204"
+        }
+      ]
+    },
+    {
+      "_id": "5af4c621-b28f-4f71-bc1c-8d4197ade319",
+      "colId": "2519553b-45ea-41f8-b323-02bc7220df25",
+      "containerId": "0b395007-c840-4528-a801-1a43181f1349",
+      "name": "Eliminar proyecto",
+      "url": "{{url}}/proyectos/{{pid}}",
+      "method": "DELETE",
+      "sortNum": 70000,
+      "created": "2026-10-17T06:01:42.158Z",
+      "modified": "2026-10-17T06:01:42.158Z",
+      "headers": [],
+      "tests": [
+        {
+          "type": "res-code",
+          "custom": "",
+          "action": "equal",
+          "value": "204"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "auth": {
+      "type": "bearer",
+      "bearer": "{{token}}"
+    }
+  }
+}

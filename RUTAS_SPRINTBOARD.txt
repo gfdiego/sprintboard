@@ -1,0 +1,316 @@
+==============================================================
+                 SPRINTBOARD - RUTAS DE LA API
+==============================================================
+
+DIRECCIÓN BASE:  http://localhost:3000/api
+(El servidor debe estar encendido: en la carpeta backend -> npm run dev)
+
+TOKEN:
+  Casi todas las rutas necesitan el token que te da el LOGIN.
+  Se pone en el encabezado (Header) así:
+      Authorization: Bearer AQUI_VA_EL_TOKEN
+  O en la pestaña "Auth" -> "Bearer" -> pegas el token.
+
+NÚMEROS EN LAS RUTAS:
+  Donde dice /1 o /2, cambia ese número por el id real
+  que te devolvió la petición cuando creaste esa cosa.
+
+VALORES PERMITIDOS:
+  tipo:       historia | tarea | bug | epica | subtarea
+  prioridad:  minima | baja | media | alta | critica
+  estado:     por_hacer | en_progreso | en_revision | hecho
+  puntos:     1 | 2 | 3 | 5 | 8 | 13 | 21   (dificultad)
+  rol:        admin | miembro | observador
+  fechas:     AAAA-MM-DD   (ejemplo: 2026-12-15)
+
+
+==============================================================
+ 1. USUARIOS (no necesitan token)
+==============================================================
+
+--- Registrar usuario ---
+POST  http://localhost:3000/api/auth/registro
+{
+  "nombre": "Ana Pérez",
+  "correo": "ana@prueba.com",
+  "password": "Clave1234"
+}
+
+--- Iniciar sesión (te da el TOKEN) ---
+POST  http://localhost:3000/api/auth/login
+{
+  "correo": "ana@prueba.com",
+  "password": "Clave1234"
+}
+
+--- Ver mi usuario ---   (con token)
+GET   http://localhost:3000/api/auth/yo
+(sin body)
+
+
+==============================================================
+ 2. PROYECTOS (con token)
+==============================================================
+
+--- Crear proyecto ---
+POST  http://localhost:3000/api/proyectos
+{
+  "clave": "WEB",
+  "nombre": "Sitio web corporativo",
+  "descripcion": "Rediseño del sitio web"
+}
+
+--- Ver mis proyectos ---
+GET   http://localhost:3000/api/proyectos
+(sin body)
+
+--- Ver un proyecto ---
+GET   http://localhost:3000/api/proyectos/1
+(sin body)
+
+--- Editar proyecto ---
+PATCH http://localhost:3000/api/proyectos/1
+{
+  "nombre": "Sitio web nuevo",
+  "descripcion": "Rediseño completo"
+}
+
+--- Eliminar proyecto ---   (borra todo lo que tiene)
+DELETE http://localhost:3000/api/proyectos/1
+(sin body)
+
+
+==============================================================
+ 3. MIEMBROS DEL PROYECTO (con token)
+    La persona debe estar registrada antes.
+==============================================================
+
+--- Agregar miembro ---
+POST  http://localhost:3000/api/proyectos/1/miembros
+{
+  "correo": "luis@prueba.com",
+  "rol": "miembro",
+  "capacidad_puntos": 10
+}
+
+--- Ver miembros ---
+GET   http://localhost:3000/api/proyectos/1/miembros
+(sin body)
+
+--- Cambiar rol o capacidad de un miembro ---   (el 2 es el id del usuario)
+PATCH http://localhost:3000/api/proyectos/1/miembros/2
+{
+  "rol": "admin",
+  "capacidad_puntos": 13
+}
+
+--- Quitar miembro ---
+DELETE http://localhost:3000/api/proyectos/1/miembros/2
+(sin body)
+
+
+==============================================================
+ 4. SPRINTS (con token)
+==============================================================
+
+--- Crear sprint ---
+POST  http://localhost:3000/api/proyectos/1/sprints
+{
+  "nombre": "Sprint 1",
+  "objetivo": "Página de inicio y login",
+  "fecha_inicio": "2026-10-20",
+  "fecha_fin": "2026-11-02"
+}
+
+--- Ver sprints del proyecto ---
+GET   http://localhost:3000/api/proyectos/1/sprints
+(sin body)
+
+--- Ver un sprint ---
+GET   http://localhost:3000/api/sprints/1
+(sin body)
+
+--- Editar sprint ---
+PATCH http://localhost:3000/api/sprints/1
+{
+  "objetivo": "Login y formulario de contacto"
+}
+
+--- Iniciar sprint ---
+POST  http://localhost:3000/api/sprints/1/iniciar
+{}
+
+--- Ver tablero Kanban del sprint ---
+GET   http://localhost:3000/api/sprints/1/tablero
+(sin body)
+
+--- Cerrar sprint ---   (lo que no esté "hecho" vuelve al backlog)
+POST  http://localhost:3000/api/sprints/1/cerrar
+{}
+
+--- Eliminar sprint ---   (solo si no se ha iniciado)
+DELETE http://localhost:3000/api/sprints/1
+(sin body)
+
+
+==============================================================
+ 5. TAREAS (con token)
+==============================================================
+
+--- Crear tarea ---
+POST  http://localhost:3000/api/proyectos/1/tareas
+{
+  "titulo": "Pantalla de inicio de sesión",
+  "descripcion": "Formulario con correo y contraseña",
+  "tipo": "historia",
+  "prioridad": "alta",
+  "puntos": 5,
+  "asignado_id": 2,
+  "sprint_id": 1,
+  "fecha_limite": "2026-12-15"
+}
+  * Solo "titulo" es obligatorio.
+  * Sin "sprint_id" la tarea queda en el backlog.
+
+--- Crear subtarea ---   (necesita el id de la tarea padre)
+POST  http://localhost:3000/api/proyectos/1/tareas
+{
+  "titulo": "Validar formato del correo",
+  "tipo": "subtarea",
+  "puntos": 1,
+  "padre_id": 1
+}
+
+--- Ver todas las tareas del proyecto ---
+GET   http://localhost:3000/api/proyectos/1/tareas
+(sin body)
+
+--- Filtrar tareas ---   (se pueden combinar con &)
+GET   http://localhost:3000/api/proyectos/1/tareas?asignado=yo
+GET   http://localhost:3000/api/proyectos/1/tareas?asignado=ninguno
+GET   http://localhost:3000/api/proyectos/1/tareas?estado=en_progreso
+GET   http://localhost:3000/api/proyectos/1/tareas?tipo=bug
+GET   http://localhost:3000/api/proyectos/1/tareas?prioridad=alta
+GET   http://localhost:3000/api/proyectos/1/tareas?sprint=backlog
+GET   http://localhost:3000/api/proyectos/1/tareas?q=login
+(sin body)
+
+--- Ver backlog ---   (tareas sin sprint)
+GET   http://localhost:3000/api/proyectos/1/backlog
+(sin body)
+
+--- Ver una tarea ---
+GET   http://localhost:3000/api/tareas/1
+(sin body)
+
+--- Editar tarea ---   (manda solo lo que quieres cambiar)
+PATCH http://localhost:3000/api/tareas/1
+{
+  "titulo": "Pantalla de login",
+  "puntos": 8,
+  "prioridad": "critica"
+}
+
+--- Asignar tarea a un miembro ---   (2 = id del usuario; null = sin asignar)
+PATCH http://localhost:3000/api/tareas/1/asignar
+{
+  "asignado_id": 2
+}
+
+--- Mover tarea (cambiar estado) ---
+PATCH http://localhost:3000/api/tareas/1/mover
+{
+  "estado": "en_progreso"
+}
+
+--- Ver historial de cambios de la tarea ---
+GET   http://localhost:3000/api/tareas/1/historial
+(sin body)
+
+--- Eliminar tarea ---
+DELETE http://localhost:3000/api/tareas/1
+(sin body)
+
+
+==============================================================
+ 6. COMENTARIOS (con token)
+==============================================================
+
+--- Comentar una tarea ---
+POST  http://localhost:3000/api/tareas/1/comentarios
+{
+  "contenido": "Ya terminé el diseño del formulario"
+}
+
+--- Ver comentarios de una tarea ---
+GET   http://localhost:3000/api/tareas/1/comentarios
+(sin body)
+
+--- Editar comentario ---   (solo quien lo escribió)
+PATCH http://localhost:3000/api/comentarios/1
+{
+  "contenido": "Diseño terminado, sigo con las validaciones"
+}
+
+--- Eliminar comentario ---
+DELETE http://localhost:3000/api/comentarios/1
+(sin body)
+
+
+==============================================================
+ 7. ETIQUETAS (con token)
+==============================================================
+
+--- Crear etiqueta ---
+POST  http://localhost:3000/api/proyectos/1/etiquetas
+{
+  "nombre": "frontend",
+  "color": "#3b82f6"
+}
+
+--- Ver etiquetas ---
+GET   http://localhost:3000/api/proyectos/1/etiquetas
+(sin body)
+
+--- Poner etiquetas a una tarea ---   (lista de ids de etiquetas)
+PUT   http://localhost:3000/api/tareas/1/etiquetas
+{
+  "etiquetas": [1, 2]
+}
+
+--- Eliminar etiqueta ---
+DELETE http://localhost:3000/api/proyectos/1/etiquetas/1
+(sin body)
+
+
+==============================================================
+ 8. REPORTES (con token)
+==============================================================
+
+--- Carga de trabajo por miembro ---
+GET   http://localhost:3000/api/proyectos/1/reportes/carga
+(sin body)
+
+--- Velocidad del equipo ---
+GET   http://localhost:3000/api/proyectos/1/reportes/velocidad
+(sin body)
+
+--- Burndown del sprint ---   (el sprint debe estar iniciado)
+GET   http://localhost:3000/api/sprints/1/reportes/burndown
+(sin body)
+
+
+==============================================================
+ ORDEN SUGERIDO PARA PROBAR
+==============================================================
+ 1. Registrar 2 usuarios (ana y luis)
+ 2. Login con ana -> copiar el token
+ 3. Crear proyecto
+ 4. Agregar a luis como miembro
+ 5. Crear sprint
+ 6. Crear tareas (con puntos y asignadas)
+ 7. Iniciar sprint
+ 8. Mover tareas y ver el tablero
+ 9. Ver reportes
+10. Cerrar sprint
+==============================================================
