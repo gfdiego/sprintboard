@@ -31,7 +31,7 @@ export const ESTADOS_SPRINT = {
 };
 
 export const ROLES = {
-  admin: { nombre: 'Admin', descripcion: 'Gestiona miembros, sprints y el proyecto', insignia: 'bg-purple-100 text-purple-700' },
+  admin: { nombre: 'Admin', descripcion: 'Gestiona miembros, sprints y el proyecto', insignia: 'bg-blue-600 text-white' },
   miembro: { nombre: 'Miembro', descripcion: 'Crea y edita tareas', insignia: 'bg-blue-100 text-blue-700' },
   observador: { nombre: 'Observador', descripcion: 'Solo puede ver', insignia: 'bg-slate-100 text-slate-600' },
 };

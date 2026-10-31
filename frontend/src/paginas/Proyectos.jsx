@@ -105,7 +105,7 @@ export default function Proyectos() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">Hola, {usuario.nombre.split(' ')[0]}</h1>
+          <h1 className="text-3xl font-medium text-slate-900">Hola, {usuario.nombre.split(' ')[0]}</h1>
           <p className="text-sm text-slate-500">Estos son los proyectos en los que participas.</p>
         </div>
         <Boton onClick={() => setCreando(true)}>+ Nuevo proyecto</Boton>
@@ -126,13 +126,13 @@ export default function Proyectos() {
             <li key={p.id}>
               <Link
                 to={`/proyectos/${p.id}`}
-                className="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-5 transition hover:border-blue-300 hover:shadow-md"
+                className="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md"
               >
                 <div className="flex items-start justify-between gap-3">
                   <span className="rounded-md bg-blue-600 px-2 py-1 text-xs font-bold tracking-wide text-white">{p.clave}</span>
                   <RolInsignia rol={p.rol} />
                 </div>
-                <h2 className="mt-3 font-semibold text-slate-900">{p.nombre}</h2>
+                <h2 className="mt-3 text-lg font-medium text-slate-900">{p.nombre}</h2>
                 <p className="mt-1 line-clamp-2 flex-1 text-sm text-slate-500">{p.descripcion || 'Sin descripción'}</p>
                 <div className="mt-4 flex gap-4 border-t border-slate-100 pt-3 text-xs text-slate-500">
                   <span>

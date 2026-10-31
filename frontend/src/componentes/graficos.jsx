@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 
 // Colores de los gráficos (paleta validada: serie 1 sobre superficie blanca)
 const C = {
-  serie: '#2a78d6',
+  serie: '#7a5234',
   critico: '#d03b3b',
-  tinta: '#0b0b0b',
+  tinta: '#2a211b',
   secundaria: '#52514e',
   apagada: '#898781',
   rejilla: '#e1e0d9',
@@ -198,7 +198,7 @@ export function GraficoCarga({ filas }) {
             const largo = Math.max(x(f.asignados) - m.izquierda, f.asignados ? 4 : 0);
             return (
               <g key={f.id} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}>
-                <rect x="0" y={cy - alturaFila / 2} width={ancho} height={alturaFila} fill={hover === i ? '#f1f5f9' : 'transparent'} />
+                <rect x="0" y={cy - alturaFila / 2} width={ancho} height={alturaFila} fill={hover === i ? '#f2ece2' : 'transparent'} />
                 <text x={m.izquierda - 10} y={cy} dy="0.32em" textAnchor="end" fontSize="12" fill={C.tinta}>
                   {f.nombre.length > 18 ? `${f.nombre.slice(0, 17)}…` : f.nombre}
                 </text>
@@ -263,7 +263,7 @@ export function GraficoVelocidad({ sprints, promedio }) {
             const alturaBarra = Math.max(y(0) - y(s.puntos), s.puntos ? 4 : 0);
             return (
               <g key={s.id} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}>
-                <rect x={cx - banda / 2} y={m.arriba} width={banda} height={h} fill={hover === i ? '#f1f5f9' : 'transparent'} />
+                <rect x={cx - banda / 2} y={m.arriba} width={banda} height={h} fill={hover === i ? '#f2ece2' : 'transparent'} />
                 {alturaBarra > 0 && (
                   // Esquinas redondeadas solo arriba: la barra se apoya en la línea base
                   <path
